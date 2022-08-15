@@ -3,8 +3,7 @@ import torch.nn.functional as F
 from torch.nn import Linear, Sequential,BatchNorm1d,ReLU
 from torch_geometric.data import Data
 from torch_geometric.data.batch import Batch
-from torch_geometric.nn.glob import global_add_pool, global_mean_pool, \
-    global_max_pool, GlobalAttention, Set2Set
+from torch_geometric.nn.glob import global_add_pool, global_mean_pool, global_max_pool, GlobalAttention, Set2Set
 from typing import Callable, Optional, Union
 
 from federatedscope.gfl.model.gcn import GCN_Net

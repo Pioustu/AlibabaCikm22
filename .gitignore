@@ -9,3 +9,6 @@ runs_logs/
 
 # ignore *.log
 *.log
+
+# ignore .ipynb_checkpoints
+.ipynb_checkpoints/

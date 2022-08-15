@@ -33,7 +33,7 @@ if __name__ == '__main__':
         client_val_dl = all_dl[i]['val']
         client_test_dl = all_dl[i]['test']
         client = Client(id=i,config=client_cfg,train_dl=client_train_dl,val_dl=client_val_dl,test_dl=client_test_dl)
-        model_path = './result/model_8.9_GNN_Net_Graph_gin_depth3_drop0.2/' + str(i) + '/best.pt'
+        model_path = './result/model/' + str(i) + '/best.pt'
         client.load_model_by_path(model_path)
         
         if client_cfg.task =="C":

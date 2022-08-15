@@ -35,9 +35,9 @@ class Client(object):
     
         # 定义损失函数
         if self.cfg.task == 'C': # 执行分类任务
-            # self.criterion = torch.nn.CrossEntropyLoss()
+            self.criterion = torch.nn.CrossEntropyLoss()
             # focal loss
-            self.criterion = WeightedFocalLoss()
+            # self.criterion = WeightedFocalLoss()
             
 
         elif self.cfg.task == 'R':
@@ -89,11 +89,10 @@ class Client(object):
         mse = 99999999999999
         loss = 9999999999999
 
-        # 获得上一个模型的gnn参数
-        # 从第二个客户端开始
-        if self.id > 1:
-            self.model.gnn = all_client[self.id - 1].model.gnn
-            print("GNN replace OK")
+        # 循环替换gnn,从第二个客户端开始
+        # if self.id > 1:
+        #     self.model.gnn = all_client[self.id - 1].model.gnn
+        #     print("GNN replace OK")
 
     
         for e in range(1,self.cfg.ep+1):

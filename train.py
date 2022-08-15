@@ -42,23 +42,8 @@ if __name__ == '__main__':
         all_weight = []
         val_error = []
         for i,client in enumerate(all_client):
-            # if i<2:
-            #     continue
-            # if i<8 or i >11:
-            #     continue
-            # weight = client.update()
             weight = client.update(all_client)
             all_weight.append(weight)
             val_error.append(client.best_error)
-
-        # new_weight = fedAvg(all_weight)
-        # new_weight = FedBN(all_weight)
-
-        # for i,client in enumerate(all_client):
-        #     client.model_update_by_server(new_weight[i])
-
         res = socre(base_error,val_error)
         print(res)
-
-
-
