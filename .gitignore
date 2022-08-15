@@ -1,0 +1,11 @@
+# ignore data
+data/
+
+# ignore __pycache__
+__pycache__/
+
+# ignore runs_logs
+runs_logs/
+
+# ignore *.log
+*.log
