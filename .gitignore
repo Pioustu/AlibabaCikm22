@@ -1,5 +1,5 @@
 # ignore data
-data/
+data/CIKM22Competition/
 
 # ignore __pycache__
 __pycache__/

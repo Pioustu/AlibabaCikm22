@@ -55,7 +55,7 @@ class Client(object):
         
         model = GNN_Net_Graph(in_channels=self.cfg.in_dim,
             out_channels=self.cfg.num_cls,
-            hidden=64,
+            hidden=128,
             max_depth=3,
             dropout=.2,
             gnn='gin',
