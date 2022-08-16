@@ -53,16 +53,28 @@ class Client(object):
     def load_model(self):
         dim_edge = self.cfg.dim_edge if self.cfg.dim_edge > 0 else None
         
-        model = GNN_Net_Graph(in_channels=self.cfg.in_dim,
-            out_channels=self.cfg.num_cls,
-            hidden=128,
-            max_depth=3,
-            dropout=.2,
-            gnn='gin',
-            # pooling='att',
-            pooling='mean',
-            use_edge=False,
-            edge_dim=dim_edge)
+        if self.cfg.task == 'C':
+            model = GNN_Net_Graph(in_channels=self.cfg.in_dim,
+                out_channels=self.cfg.num_cls,
+                hidden=64,
+                max_depth=3,
+                dropout=.3,
+                gnn='gin',
+                # pooling='att',
+                pooling='mean',
+                use_edge=False,
+                edge_dim=dim_edge)
+        else:
+            model = GNN_Net_Graph(in_channels=self.cfg.in_dim,
+                out_channels=self.cfg.num_cls,
+                hidden=128,
+                max_depth=3,
+                dropout=.2,
+                gnn='gin',
+                # pooling='att',
+                pooling='mean',
+                use_edge=False,
+                edge_dim=dim_edge)
         
         # 加载向右训练一轮后的gnn模型
         # model_weight = torch.load('./result/model_8.14_turnright/'+str(self.id)+'/best.pt')
