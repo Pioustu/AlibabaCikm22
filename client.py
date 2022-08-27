@@ -15,7 +15,8 @@ from tensorboardX import SummaryWriter
 
 
 class Client(object):
-    def __init__(self,id,config,train_dl,val_dl,test_dl=None):
+    def __init__(self,fold, id,config,train_dl,val_dl,test_dl=None):
+        self.fold = fold
         self.id = id
         self.round=0
         self.cfg = config
@@ -58,7 +59,7 @@ class Client(object):
                 out_channels=self.cfg.num_cls,
                 hidden=64,
                 max_depth=3,
-                dropout=.3,
+                dropout=.35,
                 gnn='gin',
                 # pooling='att',
                 pooling='mean',
@@ -274,7 +275,7 @@ class Client(object):
                 file.write(','.join([str(_) for _ in line]) + '\n')
     
     def saveModel(self):
-        path = './result/model/'+ str(self.id) 
+        path = './result/model/'+ 'fold' + str(self.fold)+'/'+ str(self.id) 
         if not os.path.exists(path):
             os.makedirs(path)
         path = path + '/best.pt'

@@ -1,5 +1,5 @@
 import logging
-
+import numpy as np
 import torch
 import os
 from torch_geometric.data import InMemoryDataset
@@ -61,3 +61,14 @@ def load_client_data(config):
         dataloader_dict['test'] = DataLoader(dataset[client_id]['test'],config.batch_size)
         data_dict[client_id] = dataloader_dict
     return data_dict
+
+
+
+# 可直接调用此函数
+def set_seed(SEED=0):
+  np.random.seed(SEED)
+  torch.manual_seed(SEED)  # 为CPU设置种子用于生成随机数，以使得结果是确定的
+  torch.cuda.manual_seed(SEED)  # 为GPU设置随机种子
+  torch.cuda.manual_seed_all(SEED)
+  torch.backends.cudnn.benchmark = False  # if benchmark=True, deterministic will be False
+  torch.backends.cudnn.deterministic = True

@@ -22,28 +22,32 @@ def socre(base_error,val_error):
 
 
 if __name__ == '__main__':
+    
+    # 五折交叉验证
+    for fold in range(1,6):
+        config = CfgNode.load_cfg(open('./config.yaml'))
+        config.data_sp.root_path  = config.data_sp.root_path +'Fold'+ str(fold) +'/'
 
-    config = CfgNode.load_cfg(open('./config.yaml'))
-    all_dl = load_client_data(config.data_sp)
-    all_client=[]
+        all_dl = load_client_data(config.data_sp)
+        all_client=[]
 
-    for i in range(1,14):
-        client_id = i
-        client_name = 'client' + str(i)
-        client_cfg = config[client_name]
-        client_train_dl = all_dl[i]['train']
-        client_val_dl = all_dl[i]['val']
-        client_test_dl = all_dl[i]['test']
-        client = Client(id=i,config=client_cfg,train_dl=client_train_dl,val_dl=client_val_dl,test_dl=client_test_dl)
-        all_client.append(client)
+        for i in range(1,14):
+            client_id = i
+            client_name = 'client' + str(i)
+            client_cfg = config[client_name]
+            client_train_dl = all_dl[i]['train']
+            client_val_dl = all_dl[i]['val']
+            client_test_dl = all_dl[i]['test']
+            client = Client(fold=fold,id=i,config=client_cfg,train_dl=client_train_dl,val_dl=client_val_dl,test_dl=client_test_dl)
+            all_client.append(client)
 
-    for r in range(1):
-        print('round:',r)
-        all_weight = []
-        val_error = []
-        for i,client in enumerate(all_client):
-            weight = client.update(all_client)
-            all_weight.append(weight)
-            val_error.append(client.best_error)
-        res = socre(base_error,val_error)
-        print(res)
+        for r in range(1):
+            print('round:',r)
+            all_weight = []
+            val_error = []
+            for i,client in enumerate(all_client):
+                weight = client.update(all_client)
+                all_weight.append(weight)
+                val_error.append(client.best_error)
+            res = socre(base_error,val_error)
+            print(res)

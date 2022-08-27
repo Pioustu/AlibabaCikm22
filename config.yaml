@@ -181,7 +181,8 @@ client13:
 
 data_sp:
   shuffle: True
-  root_path: data/
+  root_path: data/splitFold/data/
+  fold: 1
   batch_size: 4096
   num_worker: 4
 
