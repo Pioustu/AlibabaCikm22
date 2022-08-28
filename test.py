@@ -20,29 +20,37 @@ def socre(base_error,val_error):
 if __name__ == '__main__':
 
     config = CfgNode.load_cfg(open('./config.yaml'))
+    # 先加载 fold1中的数据
+    config.data_sp.root_path  = config.data_sp.root_path +'Fold'+ str(1) +'/'
     all_dl = load_client_data(config.data_sp)
+    
     all_client=[]
 
     val_error = []
 
     for i in range(1,14):
+        # 初始化每个client
         client_id = i
         client_name = 'client' + str(i)
         client_cfg = config[client_name]
         client_train_dl = all_dl[i]['train']
         client_val_dl = all_dl[i]['val']
         client_test_dl = all_dl[i]['test']
-        client = Client(id=i,config=client_cfg,train_dl=client_train_dl,val_dl=client_val_dl,test_dl=client_test_dl)
-        model_path = './result/model/' + str(i) + '/best.pt'
+        client = Client(fold=1,id=i,config=client_cfg,train_dl=client_train_dl,val_dl=client_val_dl,test_dl=client_test_dl)
+        
+        model_path = './result/model/fold'+str(1)+'/' + str(client_id) + '/best.pt'
         client.load_model_by_path(model_path)
+        # model_path = './result/model/' + str(i) + '/best.pt'
         
-        if client_cfg.task =="C":
-            client.test_C()
-        else:
-            client.test_R()
+        # client.load_model_by_path(model_path)
         
-        print('client:{},error:{}'.format(i,client.error))
-        val_error.append(client.error)
+        # if client_cfg.task =="C":
+        #     client.test_C()
+        # else:
+        #     client.test_R()
+        
+        # print('client:{},error:{}'.format(i,client.error))
+        # val_error.append(client.error)
 
         client.result()
 

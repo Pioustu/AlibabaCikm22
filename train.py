@@ -22,9 +22,10 @@ def socre(base_error,val_error):
 
 
 if __name__ == '__main__':
-    
+
     # 五折交叉验证
     for fold in range(1,6):
+        
         config = CfgNode.load_cfg(open('./config.yaml'))
         config.data_sp.root_path  = config.data_sp.root_path +'Fold'+ str(fold) +'/'
 

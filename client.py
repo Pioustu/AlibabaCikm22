@@ -252,10 +252,23 @@ class Client(object):
         path = './data/cikm22/'
         data_index = [self.tes_dl.dataset[i].data_index for i in range(len(self.tes_dl.dataset))]
         print(data_index)
+
+
+
         for i, data in enumerate(self.tes_dl):
             data = data.to(self.device)
             # print(len(data.data_index),data.data_index)
+
+
             out = self.model(data)
+            for fold in range(2,6):
+                model_path = './result/model/fold'+str(fold)+'/' + str(self.id) + '/best.pt'
+                self.load_model_by_path(model_path)
+
+                out += self.model(data)
+            
+            out /= 5
+
             if self.cfg.task=='C':
                 pred = out.argmax(dim=1)
             else:
