@@ -35,10 +35,10 @@ alpha_all_ = [
 ]
 alpha_all = [[a[1],a[0]] for a in alpha_all_ ]
 
-tensorboard_path = './cikm22/exp/tensorboard_logs/circle_gtr_clsusefull_prox_is3_ft5_2/score'
+tensorboard_path = '/home/featurize/cikm22/exp/tensorboard_logs/circle_gtr_clsusefull_prox_is3_ft5_2/score'
 config_path = './config/config.yaml'
-client_model_save_path = './cikm22/result/circle_gtr_clsusefull_prox_is3_ft5_2/'
-client_tensorboard_path = './cikm22/exp/tensorboard_logs/circle_gtr_clsusefull_prox_is3_ft5_2/'
+client_model_save_path = '/home/featurize/cikm22/result/circle_gtr_clsusefull_prox_is3_ft5_2/'
+client_tensorboard_path = '/home/featurize/cikm22/exp/tensorboard_logs/circle_gtr_clsusefull_prox_is3_ft5_2/'
 
 fedlayer = ['gnn.convs.0.nn.linears.0.weight', 'gnn.convs.0.nn.linears.0.bias', 'gnn.convs.0.nn.linears.1.weight', 
             'gnn.convs.0.nn.linears.1.bias', 'gnn.convs.1.nn.linears.0.weight', 'gnn.convs.1.nn.linears.0.bias', 
@@ -65,13 +65,11 @@ if __name__ == '__main__':
     # 加载配置文件
     config = CfgNode.load_cfg(open(config_path))
     # 加载所有的数据
-    config.root_path = './cikm22/data/full/'
+    config.root_path = '/home/featurize/cikm22/data/full/'
     all_dl = load_client_data(config.data_sp,[1,2,3,4,5,6,7,8,9,10,11,12,13])
 
     # 保存所有的客户端
     all_client=[]
-
-    # norm  .lin.  ln  encoder  reg   
 
     # 客户端初始化
     for i in range(1,14):

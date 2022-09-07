@@ -37,8 +37,8 @@ class GTR(torch.nn.Module):
         # gin = GIN_Net(in_channels=hidden,out_channels=hidden,hidden=hidden,max_depth=max_depth,dropout=dropout)
         self.gtr = GraphMultisetTransformer(in_channels=hidden,hidden_channels=hidden,out_channels=hidden,Conv=GATConv,layer_norm=True)
         self.clf = Linear(hidden,2)
-        if self.reg == True:
-            self.regLayer = Linear(2,out_channels)
+        if self.reg:
+            self.regLayer = Linear(2, out_channels)
     
     def forward(self,data):
         x, edge_index, batch = data.x, data.edge_index, data.batch
@@ -53,7 +53,7 @@ class GTR(torch.nn.Module):
         # x = self.ln2(x)
         x = F.dropout(x, 0.5, training=self.training)
         x = self.clf(x) # 分类/回归
-        if self.reg == True:
+        if self.reg:
             x = self.regLayer(x)
         return x
 
