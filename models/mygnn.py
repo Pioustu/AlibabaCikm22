@@ -31,7 +31,7 @@ class AtomEncoder(torch.nn.Module):
         return x_embedding
 
 
-class GNN_Net_Graph(torch.nn.Module):
+class GNN_C(torch.nn.Module):
     r"""GNN model with pre-linear layer, pooling layer
         and output layer for graph classification tasks.
 
@@ -50,14 +50,14 @@ class GNN_Net_Graph(torch.nn.Module):
                  hidden=64,
                  max_depth=2,
                  dropout=.0,
-                 g_dropout=.0,
-                 gnn='gcn',
                  pooling='add',
                  use_edge=False,
+                 use_edge_c=False,
                  edge_dim=10,
                  use_eps=False):
-        super(GNN_Net_Graph, self).__init__()
+        super(GNN_C, self).__init__()
         self.use_edge=use_edge
+        self.use_edge_c=use_edge_c 
         self.dropout = dropout
         # Embedding (pre) layer
         # self.encoder_atom = AtomEncoder(in_channels, hidden)
@@ -67,47 +67,34 @@ class GNN_Net_Graph(torch.nn.Module):
         #                 torch.nn.BatchNorm1d(hidden)
         # )
         # GNN layer
-        if gnn == 'gcn':
-            self.gnn = GCN_Net(in_channels=hidden,
-                               out_channels=hidden,
-                               hidden=hidden,
-                               max_depth=max_depth,
-                               dropout=dropout)
-        elif gnn == 'sage':
-            self.gnn = SAGE_Net(in_channels=hidden,
+        self.gnn = GIN_Net(in_channels=hidden,
+                            out_channels=hidden,
+                            hidden=hidden,
+                            max_depth=max_depth,
+                            dropout=dropout)
+        if use_edge==True:
+            self.gnn = GINE_Net(in_channels=hidden,
                                 out_channels=hidden,
                                 hidden=hidden,
                                 max_depth=max_depth,
-                                dropout=dropout)
-        elif gnn == 'gat':
-            self.gnn = GAT_Net(in_channels=hidden,
-                               out_channels=hidden,
-                               hidden=hidden,
-                               max_depth=max_depth,
-                               dropout=dropout)
-        elif gnn == 'gin':
-            self.gnn = GIN_Net(in_channels=hidden,
-                               out_channels=hidden,
-                               hidden=hidden,
-                               max_depth=max_depth,
-                               dropout=g_dropout)
-            if use_edge==True:
-                self.gnn = GINE_Net(in_channels=hidden,
-                                    out_channels=hidden,
-                                    hidden=hidden,
-                                    max_depth=max_depth,
-                                    dropout=dropout,
-                                    edge_dim=edge_dim,
-                                    use_eps=use_eps)
+                                dropout=dropout,
+                                edge_dim=edge_dim,
+                                use_eps=use_eps)
 
-        elif gnn == 'gpr':
-            self.gnn = GPR_Net(in_channels=hidden,
-                               out_channels=hidden,
-                               hidden=hidden,
-                               K=max_depth,
-                               dropout=dropout)
-        else:
-            raise ValueError(f'Unsupported gnn type: {gnn}.')
+        self.gnn_c = GIN_Net(in_channels=hidden,
+                            out_channels=hidden,
+                            hidden=hidden,
+                            max_depth=max_depth,
+                            dropout=dropout)
+        
+        if use_edge_c==True:
+            self.gnn_c = GINE_Net(in_channels=hidden,
+                                out_channels=hidden,
+                                hidden=hidden,
+                                max_depth=max_depth,
+                                dropout=dropout,
+                                edge_dim=edge_dim,
+                                use_eps=use_eps)
 
         # Pooling layer
         if pooling == 'add':
@@ -119,7 +106,7 @@ class GNN_Net_Graph(torch.nn.Module):
         else:
             raise ValueError(f'Unsupported pooling type: {pooling}.')
         # Output layer
-        self.linear = Sequential(Linear(hidden, hidden), torch.nn.ReLU())
+        self.linear = Sequential(Linear(2*hidden, hidden), torch.nn.ReLU())
         self.clf = Linear(hidden, out_channels)
 
     def forward(self, data):
@@ -140,10 +127,19 @@ class GNN_Net_Graph(torch.nn.Module):
         if self.use_edge== True:
             edge_attr = data.edge_attr
             x = self.gnn((x,edge_index,edge_attr))
+            if self.use_edge_c == True:
+                x_c = self.gnn_c((x,edge_index,edge_attr))
+            else:
+                x_c = self.gnn_c((x,edge_index))
         else:
             x = self.gnn((x, edge_index))
+            if self.use_edge_c == True:
+                x_c = self.gnn_c((x,edge_index,edge_attr))
+            else:
+                x_c = self.gnn_c((x,edge_index))
         x = self.pooling(x, batch)
-        x = F.dropout(x, self.dropout, training=self.training)
+        x_c = self.pooling(x_c, batch)
+        x = torch.cat([x,x_c],dim=1)
         x = self.linear(x)
         x = F.dropout(x, self.dropout, training=self.training)
         x = self.clf(x)

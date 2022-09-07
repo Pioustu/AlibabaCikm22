@@ -2,7 +2,7 @@ import torch
 import torch.nn.functional as F
 from torch.nn import ModuleList
 from torch_geometric.data import Data
-from torch_geometric.nn import GINConv
+from torch_geometric.nn import GINConv,GINEConv
 
 from federatedscope.core.mlp import MLP
 """
@@ -40,7 +40,62 @@ Model param names of GIN:
     'convs.1.nn.norms.1.num_batches_tracked',
 ]
 """
+class GINE_Net(torch.nn.Module):
+    r"""Graph Isomorphism Network model from the "How Powerful are Graph
+    Neural Networks?" paper, in ICLR'19
 
+    Arguments:
+        in_channels (int): dimension of input.
+        out_channels (int): dimension of output.
+        hidden (int): dimension of hidden units, default=64.
+        max_depth (int): layers of GNN, default=2.
+        dropout (float): dropout ratio, default=.0.
+
+    """
+    def __init__(self,
+                 in_channels,
+                 out_channels,
+                 hidden=64,
+                 max_depth=2,
+                 dropout=.0,
+                 edge_dim=None,
+                 use_eps=False):
+        super(GINE_Net, self).__init__()
+        self.convs = ModuleList()
+        for i in range(max_depth):
+            if i == 0:
+                self.convs.append(
+                    GINEConv(MLP([in_channels, hidden, hidden],
+                                batch_norm=True)),
+                                train_eps=use_eps,
+                                edge_dim=edge_dim)
+            elif (i + 1) == max_depth:
+                self.convs.append(
+                    GINEConv(
+                        MLP([hidden, hidden, out_channels], batch_norm=True)), 
+                                train_eps=use_eps,
+                                edge_dim=edge_dim)
+            else:
+                self.convs.append(
+                    GINEConv(MLP([hidden, hidden, hidden], batch_norm=True)),
+                                train_eps=use_eps,
+                                edge_dim=edge_dim)
+        self.dropout = dropout
+
+    def forward(self, data):
+        if isinstance(data, Data):
+            x, edge_index, edge_attr = data.x, data.edge_index, data.edge_attr
+        elif isinstance(data, tuple):
+            x, edge_index = data
+        else:
+            raise TypeError('Unsupported data type!')
+
+        for i, conv in enumerate(self.convs):
+            x = conv(x, edge_index, edge_attr)
+            if (i + 1) == len(self.convs):
+                break
+            x = F.relu(F.dropout(x, p=self.dropout, training=self.training))
+        return x
 
 class GIN_Net(torch.nn.Module):
     r"""Graph Isomorphism Network model from the "How Powerful are Graph

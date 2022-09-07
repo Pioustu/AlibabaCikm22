@@ -8,10 +8,15 @@ from re import I
 from client import Client
 from utils import load_client_data
 from yacs.config import CfgNode
-
+from utils import set_seed
 from server import FedBN, fedAvg
 
-base_error = [0.263789,0.289617,0.355404,0.176471,0.396825,0.261580,0.302378,0.211538,0.059199,0.007083,0.734011,1.361326,0.004389]
+# base_error = [0.263789,0.289617,0.355404,0.176471,0.396825,0.261580,0.302378,0.211538,0.059199,0.007083,0.734011,1.361326,0.004389]
+
+
+set_seed()
+
+base_error = [0.289617]
 
 def socre(base_error,val_error):
     s = 0
@@ -21,18 +26,21 @@ def socre(base_error,val_error):
     return s/13
 
 
-if __name__ == '__main__':
 
+
+if __name__ == '__main__':
     # 五折交叉验证
-    for fold in range(1,6):
+    for fold in range(1,2):
+
         
         config = CfgNode.load_cfg(open('./config.yaml'))
-        config.data_sp.root_path  = config.data_sp.root_path +'Fold'+ str(fold) +'/'
+        # config.data_sp.root_path  = config.data_sp.root_path +'Fold'+ str(fold) +'/'
 
         all_dl = load_client_data(config.data_sp)
         all_client=[]
 
-        for i in range(1,14):
+        # for i in range(1,14):
+        for i in [2]:
             client_id = i
             client_name = 'client' + str(i)
             client_cfg = config[client_name]

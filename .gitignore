@@ -1,7 +1,8 @@
 # ignore data
 data/CIKM22Competition/
 data/splitFold/
-data/splitFold1/
+data/splitFold2/
+cikm22/
 
 # ignore __pycache__
 __pycache__/

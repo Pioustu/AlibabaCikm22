@@ -1,0 +1,285 @@
+# iscift1 ci_lr=0.003/0.0003(12)
+client1:
+  is_ep: 1000
+  ci_ep: 1
+  ft_ep: 500
+  ft2_ep: 300
+  is_lr: 0.005
+  ci_lr: 0.005
+  ft_lr: 0.001
+  bs: 64
+  ep: 1
+  task: cls
+  model: gin
+  in_dim: 22
+  in_channel: 64
+  out_channel: 64
+  num_cls: 2
+  max_depth: 2
+  edge_dim: 8
+  dropout: 0.2
+  task: C
+
+
+client2:
+  is_ep: 1000
+  ci_ep: 1
+  ft_ep: 500
+  ft2_ep: 300
+  is_lr: 0.005
+  ci_lr: 0.005
+  ft_lr: 0.001
+  lr: 0.001
+  bs: 64
+  ep: 1
+  task: cls
+  model: gcn
+  in_dim: 20
+  in_channel: 64
+  out_channel: 64
+  num_cls: 2
+  max_depth: 2
+  edge_dim: 4
+  dropout: 0.5
+  task: C
+
+client3:
+  is_ep: 1000
+  ci_ep: 1
+  ft_ep: 500
+  ft2_ep: 00
+  is_lr: 0.005
+  ci_lr: 0.005
+  ft_lr: 0.001
+  lr: 0.001
+  bs: 64
+  ep: 1
+  task: cls
+  model: gcn
+  in_dim: 37
+  in_channel: 64
+  out_channel: 64
+  num_cls: 2
+  max_depth: 2
+  edge_dim: 0
+  dropout: 0.2
+  task: C
+
+client4:
+  is_ep: 1000
+  ci_ep: 1
+  ft_ep: 500
+  ft2_ep: 100
+  is_lr: 0.005
+  ci_lr: 0.005
+  ft_lr: 0.001
+  bs: 64
+  ep: 1
+  task: cls
+  model: gcn
+  in_dim: 7
+  in_channel: 64
+  out_channel: 64
+  num_cls: 2
+  max_depth: 2
+  edge_dim: 4
+  dropout: 0.2
+  task: C
+
+client5:
+  is_ep: 1000
+  ci_ep: 1
+  ft_ep: 500
+  ft2_ep: 100
+  is_lr: 0.005
+  ci_lr: 0.005
+  ft_lr: 0.001
+  bs: 64
+  ep: 1
+  task: cls
+  model: gcn
+  in_dim: 18
+  in_channel: 64
+  out_channel: 64
+  num_cls: 2
+  max_depth: 2
+  edge_dim: 4
+  dropout: 0.2
+  task: C
+
+client6:
+  is_ep: 1000
+  ci_ep: 1
+  ft_ep: 500
+  ft2_ep: 100
+  is_lr: 0.005
+  ci_lr: 0.005
+  ft_lr: 0.001
+  lr: 0.001
+  bs: 64
+  ep: 1
+  in_dim: 22
+  in_channel: 64
+  out_channel: 64
+  num_cls: 2
+  max_depth: 2
+  edge_dim: 8
+  dropout: 0.2
+  task: C
+
+client7:
+  is_ep: 1000
+  ci_ep: 1
+  ft_ep: 500
+  ft2_ep: 100
+  is_lr: 0.005
+  ci_lr: 0.005
+  ft_lr: 0.001
+  lr: 0.001
+  bs: 64
+  ep: 1
+  in_dim: 38
+  in_channel: 64
+  out_channel: 64
+  num_cls: 2
+  max_depth: 2
+  edge_dim: 0
+  dropout: 0.2
+  task: C
+
+client8:
+  is_ep: 1000
+  ci_ep: 1
+  ft_ep: 500
+  ft2_ep: 100
+  is_lr: 0.005
+  ci_lr: 0.005
+  ft_lr: 0.001
+  lr: 0.001
+  bs: 64
+  ep: 1
+  in_dim: 19
+  in_channel: 64
+  out_channel: 64
+  num_cls: 2
+  max_depth: 2
+  edge_dim: 4
+  dropout: 0.2
+  task: C
+
+client9:
+  is_ep: 1000
+  ci_ep: 1
+  ft_ep: 500
+  ft2_ep: 100
+  is_lr: 0.005
+  ci_lr: 0.005
+  ft_lr: 0.001
+  lr: 0.001
+  bs: 64
+  ep: 1
+  in_dim: 28
+  in_channel: 64
+  out_channel: 64
+  num_cls: 1
+  max_depth: 2
+  edge_dim: 3
+  dropout: 0.2
+  task: R
+
+client10:
+  is_ep: 1000
+  ci_ep: 1
+  ft_ep: 500
+  ft2_ep: 100
+  is_lr: 0.005
+  ci_lr: 0.005
+  ft_lr: 0.001
+  lr: 0.001
+  bs: 64
+  ep: 1
+  in_dim: 6
+  in_channel: 64
+  out_channel: 64
+  num_cls: 10
+  max_depth: 2
+  edge_dim: 4
+  dropout: 0.2
+  task: R
+
+# 在circle中只使用 0.005和0.003
+client11:
+  is_ep: 1000
+  ci_ep: 1
+  ft_ep: 500
+  ft2_ep: 100
+  is_lr: 0.0005
+  ci_lr: 0.0005
+  ft_lr: 0.001
+  lr: 0.001
+  bs: 64
+  ep: 1
+  in_dim: 22
+  in_channel: 64
+  out_channel: 64
+  num_cls: 1
+  max_depth: 2
+  edge_dim: 8
+  dropout: 0.2
+  task: R
+
+client12:
+  is_ep: 1000
+  ci_ep: 1
+  ft_ep: 500
+  ft2_ep: 100
+  is_lr: 0.0005
+  ci_lr: 0.0005
+  ft_lr: 0.0001
+  lr: 0.001
+  bs: 64
+  ep: 1
+  in_dim: 22
+  in_channel: 64
+  out_channel: 64
+  num_cls: 1
+  max_depth: 2
+  edge_dim: 8
+  dropout: 0.2
+  task: R
+
+client13:
+  is_ep: 1000
+  ci_ep: 1
+  ft_ep: 500
+  ft2_ep: 100
+  is_lr: 0.005
+  ci_lr: 0.005
+  ft_lr: 0.001
+  lr: 0.001
+  bs: 64
+  ep: 1
+  in_dim: 11
+  in_channel: 64
+  out_channel: 64
+  num_cls: 12
+  max_depth: 2
+  edge_dim: 4
+  dropout: 0.2
+  task: R
+
+data_sp:
+  shuffle: True
+  # root_path: /home/featurize/data/cikm2022
+  root_path: data/
+  batch_size: 4096
+  num_worker: 4
+
+server:
+  round: 500
+
+exp:
+  # path: /home/featurize/cikm22/exp
+  path: ./cikm22/exp
+
+device: cuda:0

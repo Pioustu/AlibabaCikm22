@@ -1,9 +1,7 @@
-
 client1:
-  lr: 0.01
-  # lr: 0.001
+  lr: 0.001
   bs: 64
-  ep: 500
+  ep: 5
   task: cls
   model: gin
   in_dim: 22
@@ -11,15 +9,15 @@ client1:
   out_channel: 64
   num_cls: 2
   max_depth: 2
-  dim_edge: 8
+  edge_dim: 8
+  dropout: 0.2
   task: C
 
 
 client2:
-  # lr: 0.001
-  lr: 0.01
+  lr: 0.001
   bs: 64
-  ep: 500
+  ep: 5
   task: cls
   model: gcn
   in_dim: 20
@@ -27,14 +25,14 @@ client2:
   out_channel: 64
   num_cls: 2
   max_depth: 2
-  dim_edge: 4
+  edge_dim: 0
+  dropout: 0.5
   task: C
 
 client3:
-  # lr: 0.001
-  lr: 0.01
+  lr: 0.001
   bs: 64
-  ep: 500
+  ep: 5
   task: cls
   model: gcn
   in_dim: 37
@@ -42,14 +40,14 @@ client3:
   out_channel: 64
   num_cls: 2
   max_depth: 2
-  dim_edge: 0
+  edge_dim: 0
+  dropout: 0.2
   task: C
 
 client4:
-  # lr: 0.001
-  lr: 0.01
+  lr: 0.001
   bs: 64
-  ep: 500
+  ep: 5
   task: cls
   model: gcn
   in_dim: 7
@@ -57,14 +55,14 @@ client4:
   out_channel: 64
   num_cls: 2
   max_depth: 2
-  dim_edge: 4
+  edge_dim: 4
+  dropout: 0.2
   task: C
 
 client5:
-  # lr: 0.001
-  lr: 0.01
+  lr: 0.001
   bs: 64
-  ep: 500
+  ep: 5
   task: cls
   model: gcn
   in_dim: 18
@@ -72,125 +70,125 @@ client5:
   out_channel: 64
   num_cls: 2
   max_depth: 2
-  dim_edge: 4
+  edge_dim: 4
+  dropout: 0.2
   task: C
 
 client6:
-  # lr: 0.001
-  lr: 0.01
+  lr: 0.001
   bs: 64
-  ep: 500
+  ep: 5
   in_dim: 22
   in_channel: 64
   out_channel: 64
   num_cls: 2
   max_depth: 2
-  dim_edge: 8
+  edge_dim: 8
+  dropout: 0.2
   task: C
 
 client7:
-  # lr: 0.001
-  lr: 0.01
+  lr: 0.001
   bs: 64
-  ep: 500
+  ep: 5
   in_dim: 38
   in_channel: 64
   out_channel: 64
   num_cls: 2
   max_depth: 2
-  dim_edge: 0
+  edge_dim: 0
+  dropout: 0.2
   task: C
 
 client8:
-  # lr: 0.001
-  lr: 0.01
+  lr: 0.001
   bs: 64
-  ep: 500
+  ep: 5
   in_dim: 19
   in_channel: 64
   out_channel: 64
   num_cls: 2
   max_depth: 2
-  dim_edge: 4
+  edge_dim: 4
+  dropout: 0.2
   task: C
 
 client9:
-  # lr: 0.001
-  lr: 0.01
+  lr: 0.001
   bs: 64
-  ep: 500
+  ep: 5
   in_dim: 28
   in_channel: 64
   out_channel: 64
   num_cls: 1
   max_depth: 2
-  dim_edge: 3
+  edge_dim: 3
+  dropout: 0.2
   task: R
 
 client10:
-  # lr: 0.001
-  lr: 0.01
+  lr: 0.001
   bs: 64
-  ep: 500
+  ep: 5
   in_dim: 6
   in_channel: 64
   out_channel: 64
   num_cls: 10
   max_depth: 2
-  dim_edge: 4
+  edge_dim: 4
+  dropout: 0.2
   task: R
 
+# 在circle中只使用 0.005和0.003
 client11:
-  # lr: 0.001
-  lr: 0.01
+  lr: 0.001
   bs: 64
-  ep: 500
+  ep: 5
   in_dim: 22
   in_channel: 64
   out_channel: 64
   num_cls: 1
   max_depth: 2
-  dim_edge: 8
+  edge_dim: 8
+  dropout: 0.2
   task: R
 
 client12:
-  # lr: 0.001
-  lr: 0.01
+  lr: 0.001
   bs: 64
-  ep: 500
+  ep: 5
   in_dim: 22
   in_channel: 64
   out_channel: 64
   num_cls: 1
   max_depth: 2
-  dim_edge: 8
+  edge_dim: 8
+  dropout: 0.2
   task: R
 
 client13:
-  # lr: 0.001
-  lr: 0.01
+  lr: 0.001
   bs: 64
-  ep: 500
+  ep: 5
   in_dim: 11
   in_channel: 64
   out_channel: 64
   num_cls: 12
   max_depth: 2
-  dim_edge: 4
+  edge_dim: 4
+  dropout: 0.2
   task: R
 
 data_sp:
   shuffle: True
-  # root_path: data/splitFold/data/
-  root_path: data/
-  fold: 1
+  root_path: /home/featurize/data/cikm2022
   batch_size: 4096
   num_worker: 4
 
 server:
-  round: 50
+  round: 500
 
 exp:
-  path: data/exp/
+  path: /home/featurize/cikm22/exp
 
 device: cuda:0
