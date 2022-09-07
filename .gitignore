@@ -2,7 +2,7 @@
 data/CIKM22Competition/
 data/splitFold/
 data/splitFold2/
-cikm22/
+cikm22/exp/
 
 # ignore __pycache__
 __pycache__/
