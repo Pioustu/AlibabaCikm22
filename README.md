@@ -4,7 +4,7 @@
 
 ## Code Structure
 ~~~
-Fedfinal:
+AlibabaCikm22:
     ├── cikm2022
     │   └── CIKM22Competition    # dataset
     ├── circle_gtr.py
@@ -27,7 +27,7 @@ Fedfinal:
 我们根据说明安装并配置了运行环境: [Step-by-step Guidance for CIKM 2022 AnalytiCup Competition](https://tianchi.aliyun.com/forum/postDetail?spm=5176.12586969.0.0.47943ab4wXx3Ts&postId=402279)
 
 ### Step 2. 准备数据集
-在运行`Fedfinal`之前，应该先下载官方提供的[数据集](https://tianchi.aliyun.com/competition/entrance/532008/information)。之后将解压的文件(CIKM22Competition)放在`Fedfinal/cikm22/`目录下。
+在运行`AlibabaCikm22`之前，应该先下载官方提供的[数据集](https://tianchi.aliyun.com/competition/entrance/532008/information)。之后将解压的文件(CIKM22Competition)放在`AlibabaCikm22/cikm22/`目录下。
 
 ### Step 3. Make some modifications
 为了提高性能，我们只修改了很少的代码。你可以找到次文件: `anaconda3/envs/fs/lib/python3.9/site-packages/torch_geometric/nn/conv/gin_conv.py`,并做如下修改。
@@ -53,7 +53,7 @@ if edge_dim is not None:
 
 ### Step 4. 运行
 ~~~ python
-cd Fedfinal
+cd AlibabaCikm22
 
 python circle_gtr.py
 ~~~
