@@ -1,5 +1,10 @@
 # ignore data
-data/
+data/CIKM22Competition/
+data/splitFold/
+data/splitFold2/
+/data/
+
+
 
 # ignore __pycache__
 __pycache__/
@@ -9,3 +14,6 @@ runs_logs/
 
 # ignore *.log
 *.log
+
+# ignore .ipynb_checkpoints
+.ipynb_checkpoints/
