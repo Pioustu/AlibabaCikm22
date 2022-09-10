@@ -18,7 +18,7 @@ base_error = [0.263789,0.289617,0.355404,0.176471,0.396825,0.261580,0.302378,0.2
 # result_name：结果保存名称（需要修改）
 model_file_path = './result/model/circle_gtr_clsusefull_prox_is3_ft5/'
 # model_file_path_FedBn_clf = '/home/featurize/cikm22/result/only_cls_try_fed_ap/'
-client_tensorboard_path = '/home/featurize/cikm22/exp/tensorboard_logs/test/'
+client_tensorboard_path = './cikm22/exp/tensorboard_logs/test/'
 result_path = './'
 result_name = 'circle_gtr_9_7_ronghe.csv'
 
