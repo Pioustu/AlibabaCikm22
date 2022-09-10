@@ -270,7 +270,7 @@ client13:
 
 data_sp:
   shuffle: True
-  root_path: /home/featurize/data/cikm2022
+  root_path: ./cikm2022
   batch_size: 4096
   num_worker: 4
 
@@ -278,6 +278,6 @@ server:
   round: 500
 
 exp:
-  path: /home/featurize/cikm22/exp
+  path: ./exp
 
 device: cuda:0

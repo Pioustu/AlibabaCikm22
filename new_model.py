@@ -19,13 +19,11 @@ class GTR(torch.nn.Module):
                  max_depth=2,
                  dropout=.0,
                  use_edge=False,
-                 edge_dim=10,
-                 reg=False):
+                 edge_dim=10):
         super(GTR, self).__init__()
 
         # 默认参数
         self.use_edge=use_edge
-        self.reg = reg
         # self.ln1 = torch.nn.LayerNorm(hidden)
         # self.ln2 = torch.nn.LayerNorm(hidden)
         self.encoder = Linear(in_channels, hidden) # Encoder 用于将节点特征进行编码
@@ -36,9 +34,7 @@ class GTR(torch.nn.Module):
             self.gnn = GIN_Net(in_channels=hidden,out_channels=hidden,hidden=hidden,max_depth=max_depth,dropout=dropout)
         # gin = GIN_Net(in_channels=hidden,out_channels=hidden,hidden=hidden,max_depth=max_depth,dropout=dropout)
         self.gtr = GraphMultisetTransformer(in_channels=hidden,hidden_channels=hidden,out_channels=hidden,Conv=GATConv,layer_norm=True)
-        self.clf = Linear(hidden,2)
-        if self.reg:
-            self.regLayer = Linear(2, out_channels)
+        self.clf = Linear(hidden,out_channels)
     
     def forward(self,data):
         x, edge_index, batch = data.x, data.edge_index, data.batch
@@ -53,8 +49,6 @@ class GTR(torch.nn.Module):
         # x = self.ln2(x)
         x = F.dropout(x, 0.5, training=self.training)
         x = self.clf(x) # 分类/回归
-        if self.reg:
-            x = self.regLayer(x)
         return x
 
 class MLP(torch.nn.Module):

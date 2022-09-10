@@ -8,18 +8,9 @@ import os
 import torch
 from torch._C import device
 import torch.nn.functional as F
-
-
-
-
-# from model import GCN, GCN_C,GCN_R,GIN_R,GIN_C, GNN
-from models.graph_level import GNN_Net_Graph
-from model import GNN,GNN2,GNN3,Alpha
 from new_model import GTR
 
 from tensorboardX import SummaryWriter
-
-from server import FedBN
 from utils import FocalLoss
 
 share_layers = [
@@ -58,8 +49,6 @@ class Client(object):
 
         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
-        self.alpha = Alpha().to(self.device)
-
         # 判断是否使用边
         if use_e==False or self.cfg.edge_dim==0:
             use_edge = False
@@ -97,7 +86,7 @@ class Client(object):
         else:
             print('输入的任务类型有误')
 
-        # 保存当前error和best_error
+        # 保存初始化时候的error和best_error
         self.error = 0
         self.best_error,_ = self.val(val_dl)
         # self.best_error = 9999999
@@ -105,33 +94,27 @@ class Client(object):
 
         if use_dg == False:
             self.best_gnn_weight = copy.deepcopy(self.model.gnn.state_dict())
+        
+        # 初始化prox模型参数值
         self.prox_weight = None
         
-        # 输出保存路径
+        # 输出tensorboard保存路径
         self.writer = SummaryWriter(self.cfg.writer_path + 'client' + str(self.id))
 
     def load_model(self,use_e=False,double=False,use_res=False,use_dg=False,use_pgnn=False,use_gtr=False): # 用于加载模型，use_e代表是否使用边
+        '''
+            用于初始化模型
+            输入：
+                use_e: 使用边
+                double: 使用双gnn网络
+                use_res: gnn网络中添加残差连接
+                use_dg: 使用doubel gnn网络
+                use_pgnn: 使用个性化gnn网络
+                use_gtr: 使用构建的GTR模型 注：最终使用的是这个模型
+            输出：
+                model: 经过选择的模型
 
-        model = GNN(in_channels=self.cfg.in_dim,
-                            out_channels=self.cfg.num_cls,
-                            hidden=128,
-                            max_depth=3,
-                            dropout=self.cfg.dropout,
-                            pooling='mean',
-                            use_edge=use_e,
-                            onet=double,
-                            use_edge_c=False,
-                            edge_dim=self.cfg.edge_dim,
-                            use_res=use_res)
-        if use_dg==True:
-            model = GNN3(in_channels=self.cfg.in_dim,
-                            out_channels=self.cfg.num_cls,
-                            hidden=128,
-                            max_depth=3,
-                            dropout=self.cfg.dropout,
-                            use_edge=use_e,
-                            p_gnn=use_pgnn,
-                            edge_dim=self.cfg.edge_dim)
+        '''
         if use_gtr == True:
             model = GTR(
                 in_channels=self.cfg.in_dim,
@@ -234,6 +217,15 @@ class Client(object):
         self.model.load_state_dict(tmp)
 
     def load_p_weight(self,p_weight,layer_list):
+        '''
+            加载前一个客户端的模型参数，并且将共享层参数替换到当前客户端模型中
+            输入：
+                p_weight: 表示前一个模型的所有参数值，字典格式使用model.state_dict()提取
+                layer_list: 表示需要共享的层名称
+            输出：
+                无
+
+        '''
         tmp =  {}
         for name,value in self.model.state_dict().items():
             if name in layer_list:
@@ -273,19 +265,34 @@ class Client(object):
         self.model.load_state_dict(tmp,strict=False) # 只把不带norms的层进行替换
     
     def update(self,all_layer=False,encoder=True,gnn=True,gtr=True,pgnn=False,ggnn=False,ggnn_bn=False,linear=True,plinear=False,glinear=False,clf=True,\
-        stage=None,kd=False,prox=False,alpha=False,fix_grad=False):
+        stage=None,kd=False,prox=False,alpha=False):
 
-        # # gnn_c是否使用特制lr
-        # if gnn_c_lr != None:
-        #     gc_lr = gnn_c_lr
-        # else:
-        #     gc_lr = self.cfg.lr
+        '''
+            用于更新client的模型参数, 将client中模型参数根据数据进行更新
+            输入：
+                all_layer: True时候表示更新所有参数
+                encoder: True时候表示更新模型的encoder模块
+                gnn: True时候表示更新模型的gnn模块
+                gtr: True时候表示更新模型的gtr模块
+                pgnn: True时候表示更新模型的pgnn模块
+                gnn_bn: True时候表示更新gnn的bn层模块
+                linear: True时候表示更新模型的linear模块
+                plinear: True时候表示更新plinear模块
+                glinear: True时候表示更新glinear模块
+                clf: True时候表示更新clf模块
+                stage: 不同的阶段，用于标识不同的阶段，控制不同的学习率和轮数
+                kd: 是否使用知识蒸馏方法
+                alpha: 表示是否使用focalloss中的alpha参数
+            输出：
+                无
+        '''
 
         if prox == True:
             self.model_weight = copy.deepcopy(self.model.state_dict())
 
         if all_layer == False:
-            # 判断训练那一层
+
+            # 判断训练那一层，将其添加到update_layer中
             update_layer = []
             if encoder == True:
                 update_layer.append({'params':self.model.encoder.parameters()})
@@ -356,8 +363,8 @@ class Client(object):
                     print('IS No Imporve SO Stop')
                     break
                 is_no_update_stop = is_no_update_stop - 1
-            train_error,train_loss = self.train(opt,kd,prox)
-            val_error,val_loss = self.val(self.val_dl)
+            train_error,train_loss = self.train(opt,kd,prox) # 开始训练
+            val_error,val_loss = self.val(self.val_dl) # 验证当前模型
             
             # 输出相关信息
             print('Client:{:2d} Round:{} Epoch:{} Train Error:{:.5f} Val Error:{:.5f} Train Loss:{:.5f} Val Loss:{:.5f}'.format(self.id,self.round,e,train_error,val_error,train_loss,val_loss))
@@ -369,7 +376,7 @@ class Client(object):
                 self.best_error = val_error
                 # self.best_gnn_weight = copy.deepcopy(self.model.gnn.state_dict())
                 print('Client:{:2d} Round:{} Epoch:{} Save Model Best Error:{}'.format(self.id,self.round,e,self.best_error))
-                self.saveModel()
+                self.saveModel() # 保存最优模型
 
                 if stage == 'ft': # 更新后计数重启
                     ft_no_update_stop = 100
@@ -390,6 +397,16 @@ class Client(object):
         self.round = self.round + 1
 
     def train(self,opt,kd=False,prox=False): # 正常的训练
+        '''
+            用于模型的训练
+            输入：
+                opt: 一个优化器，里面包含了模型需要更新的模块
+                kd: 是否使用知识蒸馏
+                prox: 是否使用prox正则约束
+            输出：
+                train_err: 训练集的误差
+                train_los: 训练集的损失
+        '''
         self.model.train()
 
         train_err = 0
@@ -397,7 +414,7 @@ class Client(object):
         train_los = 0
         # outputs = []
 
-        if kd==True:
+        if kd==True: # 知识蒸馏
             teacher_error,_ = self.val(self.val_dl,teacher=True)
             now_error,_ = self.val(self.val_dl)
 
@@ -423,7 +440,7 @@ class Client(object):
                 t_out = self.t_model(data)
                 t_loss = 0.5* torch.norm(out-t_out,p=2)
                 loss = (1-lam)*loss + lam*t_loss
-            if prox == True:
+            if prox == True: # prox正则约束
                 for key,value in self.model.named_parameters():
                     l2_loss = torch.pow(torch.norm(value - self.prox_weight[key]), 2)
                     loss = loss + (0.002 / 2.) * l2_loss
@@ -450,6 +467,16 @@ class Client(object):
 
 
     def val(self,dl,op=False,teacher=False): # 正常的验证，返回error
+        '''
+            验证函数
+            输入：
+                dl: 需要验证的数据集
+                op: 是否输出模型的输出
+                teacher: 是否对teacher模型进行验证
+            输出：
+                op == True: 输出模型的output
+                op != True: 输出模型的误差和验证数据的损失
+        '''
         model = self.model.eval()
 
         acc = 0
@@ -526,11 +553,18 @@ class Client(object):
         
         return err
 
-    def result(self,name):
+    def result(self,name,path):
+        '''
+            保存结果到path/name.csv下面
+            输入：
+                name: 结果的名字
+                path: 结果的路径
+            输出：
+                无
+        '''
+
         self.model.eval()
         result = []
-        data_index1 = []
-        path = '/home/featurize/cikm22/'
         data_index = [self.tes_dl.dataset[i].data_index for i in range(len(self.tes_dl.dataset))]
         # print(data_index[:5])
         for i, data in enumerate(self.tes_dl):
@@ -557,6 +591,9 @@ class Client(object):
                 file.write(','.join([str(_) for _ in line]) + '\n')
     
     def saveModel(self):
+        '''
+            保存模型
+        '''
         self.cfg.save_path
         path = self.cfg.save_path + str(self.id) 
         if not os.path.exists(path):

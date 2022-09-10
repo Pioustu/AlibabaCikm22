@@ -8,8 +8,6 @@ from tkinter import N
 import numpy as np
 import math
 import torch
-from model import Alpha
-
 from new_model import GIN_Net,GINE_Net
 
 def fedAvg(clients_weight):
