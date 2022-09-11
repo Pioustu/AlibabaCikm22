@@ -49,8 +49,8 @@ fedlayer = ['gnn.convs.0.nn.linears.0.weight', 'gnn.convs.0.nn.linears.0.bias', 
             'gnn.convs.0.nn.linears.1.bias', 'gnn.convs.1.nn.linears.0.weight', 'gnn.convs.1.nn.linears.0.bias', 
             'gnn.convs.1.nn.linears.1.weight', 'gnn.convs.1.nn.linears.1.bias', 'gtr.lin1.weight', 'gtr.lin1.bias', 
             'gtr.lin2.weight', 'gtr.lin2.bias', 'gtr.pools.0.mab.fc_q.weight', 'gtr.pools.0.mab.fc_q.bias', 
-            'gtr.pools.0.mab.layer_k.att_src', 'gtr.pools.0.mab.layer_k.att_dst', 'gtr.poolts.0.mab.layer_k.bias', 
-            'gtr.pools.0.mab.layer_k.lin_src.weight', 'gtr.pools.0.mab.layer_v.att_src', 'gtr.pools.0.mab.layer_v.att_dst', 
+            'gtr.pools.0.mab.layer_k.bias', 
+            'gtr.pools.0.mab.layer_k.lin_src.weight', 
             'gtr.pools.0.mab.layer_v.bias', 'gtr.pools.0.mab.layer_v.lin_src.weight', 'gtr.pools.0.mab.fc_o.weight', 'gtr.pools.0.mab.fc_o.bias', 
             'gtr.pools.1.mab.fc_q.weight', 'gtr.pools.1.mab.fc_q.bias', 'gtr.pools.1.mab.layer_k.weight', 'gtr.pools.1.mab.layer_k.bias',
             'gtr.pools.1.mab.layer_v.weight', 'gtr.pools.1.mab.layer_v.bias', 'gtr.pools.1.mab.fc_o.weight', 'gtr.pools.1.mab.fc_o.bias', 
@@ -112,7 +112,7 @@ if __name__ == '__main__':
         client.load_p_weight(p_weight,fedlayer) 
 
     # 设置更新400Round
-    for i in range(400):
+    for i in range(350):
 
         # 记录每个客户端的得分
         val_error = []

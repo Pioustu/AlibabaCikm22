@@ -16,7 +16,8 @@ base_error = [0.263789,0.289617,0.355404,0.176471,0.396825,0.261580,0.302378,0.2
 # client_tensorboard_path：test时候tensorboard（需要修改）
 # result_path：结果保存目录（需要修改）
 # result_name：结果保存名称（需要修改）
-model_file_path = './result/model/circle_gtr_clsusefull_prox_is3_ft5/'
+# model_file_path = './result/model/circle_gtr_clsusefull_prox_is3_ft5/'
+model_file_path = './result/model/final_model_9_11/'
 # model_file_path_FedBn_clf = '/home/featurize/cikm22/result/only_cls_try_fed_ap/'
 client_tensorboard_path = './cikm22/exp/tensorboard_logs/test/'
 result_path = './'
@@ -62,7 +63,7 @@ if __name__ == '__main__':
 
         print('Client:{} Error:{}'.format(i,error))
         
-        client.result(result_name)
+        client.result(result_name, result_path)
 
     res = socre(base_error,val_error)
     print(res)
