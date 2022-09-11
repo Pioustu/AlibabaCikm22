@@ -112,7 +112,7 @@ if __name__ == '__main__':
         client.load_p_weight(p_weight,fedlayer) 
 
     # 设置更新400Round
-    for i in range(350):
+    for i in range(370):
 
         # 记录每个客户端的得分
         val_error = []
