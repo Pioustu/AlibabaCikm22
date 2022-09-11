@@ -60,7 +60,7 @@ python circle_gtr.py
 
 ### Step 5. 测试
 ~~~ python
-python python test.py 
+python test.py 
 ~~~
 
 ## 2、算法概览
