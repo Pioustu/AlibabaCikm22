@@ -30,7 +30,7 @@ AlibabaCikm22:
 在运行`AlibabaCikm22`之前，应该先下载官方提供的[数据集](https://tianchi.aliyun.com/competition/entrance/532008/information)。之后将解压的文件(CIKM22Competition)放在`AlibabaCikm22/cikm22/`目录下。
 
 ### Step 3. Make some modifications
-为了提高性能，我们只修改了很少的代码。你可以找到次文件: `anaconda3/envs/fs/lib/python3.9/site-packages/torch_geometric/nn/conv/gin_conv.py`,并做如下修改。
+为了提高性能，我们只修改了很少的代码。你可以找到此文件: `anaconda3/envs/fs/lib/python3.9/site-packages/torch_geometric/nn/conv/gin_conv.py`,并做如下修改。
 ~~~python
 # change line 145
 # before change
